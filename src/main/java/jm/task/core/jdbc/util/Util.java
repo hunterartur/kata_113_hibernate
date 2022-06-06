@@ -4,7 +4,6 @@ import jm.task.core.jdbc.model.User;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -13,17 +12,14 @@ import java.util.Properties;
 public class Util {
 
     // реализуйте настройку соеденения с БД
-    private static final String HOSTNAME = "localhost";
-    private static final String PORT = "3306";
-    private static final String NAME_DB = "katadb_1_1_3";
     private static final String USERNAME = "user1";
     private static final String PASSWORD = "kata_113";
+    private static final String URL = "jdbc:mysql://localhost:3306/katadb_1_1_3";
 
     public static Connection getConnection() {
         Connection connection = null;
-        String connectionLine = "jdbc:mysql://" + HOSTNAME + ":" + PORT + "/" + NAME_DB;
         try {
-            connection = DriverManager.getConnection(connectionLine, USERNAME, PASSWORD);
+            connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -32,11 +28,13 @@ public class Util {
 
     public static SessionFactory getSessionFactory() {
         Properties properties = new Properties();
-        try {
-            properties.load(Util.class.getResourceAsStream("/hibernate.properties"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        properties.setProperty("hibernate.connection.url", "jdbc:mysql://localhost:3306/katadb_1_1_3?useSSL=false");
+        properties.setProperty("hibernate.connection.username", "user1");
+        properties.setProperty("hibernate.connection.password", "kata_113");
+        properties.setProperty("hibernate.connection.driver_class", "com.mysql.cj.jdbc.Driver");
+        properties.setProperty("hibernate.connection.dialect", "org.hibernate.dialect.MySQLDialect");
+        properties.setProperty("current_session_context_class", "Thread");
+        properties.setProperty("hibernate.show_sql", "true");
         return new Configuration()
                 .addProperties(properties)
                 .addAnnotatedClass(User.class)
