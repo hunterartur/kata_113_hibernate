@@ -23,29 +23,19 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public void createUsersTable() {
-        try {
-            session = SESSION_FACTORY.openSession();
+        try (Session session = SESSION_FACTORY.openSession()) {
             session.beginTransaction();
             session.createSQLQuery(QUERY_CREATE_USER_TABLE).executeUpdate();
             session.getTransaction().commit();
-        } finally {
-            if (session != null) {
-                session.close();
-            }
         }
     }
 
     @Override
     public void dropUsersTable() {
-        try {
-            session = SESSION_FACTORY.openSession();
+        try (Session session = SESSION_FACTORY.openSession()) {
             session.beginTransaction();
             session.createSQLQuery(QUERY_DROP_USER_TABLE).executeUpdate();
             session.getTransaction().commit();
-        } finally {
-            if (session != null) {
-                session.close();
-            }
         }
     }
 
